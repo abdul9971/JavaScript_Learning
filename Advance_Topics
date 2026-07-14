@@ -1,0 +1,295 @@
+let h1 = document.querySelector("h1");
+
+setTimeout(()=>{
+    h1.style.color = "red";
+}, 500);
+setTimeout(()=>{
+    h1.style.color = "green";
+}, 1000);
+setTimeout(()=>{
+    h1.style.color = "blue";
+}, 1500);
+setTimeout(()=>{
+    h1.style.color = "purple";
+}, 2000);
+
+
+function chcolor(color, delay, callback) {
+    setTimeout(() => {
+        h1.style.color = color;
+        if (callback){callback()}
+    }, delay);
+};
+
+chcolor("red", 500, () => {
+    chcolor("orange", 500, () => {
+        chcolor("yellow", 500, () => {
+            chcolor("green", 500, () => {
+                chcolor("blue", 500, () => {
+                    chcolor("purple", 500, () => {
+                        chcolor("darkblue", 500, () => {
+                            chcolor("darkturquoise", 500, () => {
+                                chcolor("darkcyan", 500, () => {
+                                    chcolor("darkorchid", 500, () => {
+                                        chcolor("darkgoldenrod", 500, () => {
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
+
+function changecol(color) {
+    setTimeout(() => {
+        h1.style.color = color;
+    }, (count + 1) * 500);
+}
+
+let colors = ["red", "orange", "yellow", "green", "blue", "purple"];
+
+let count = 0;
+for (color of colors) {
+    changecol(color);
+    count++;
+}
+
+
+function simpleDelay(param) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (param) {
+                resolve("Operation Success");
+            } else {
+                reject("Operation Reject");
+            }
+        })
+    })
+};
+
+simpleDelay(true)
+    .then(res => {
+        console.log(res);
+    })
+    .catch(err => {
+        console.log(err);
+    })
+
+
+function colorchg(color, delay) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (color, delay) {
+                h1.style.color = color;
+                console.log(`${color} Executed`)
+                resolve();
+            }
+            else {
+                reject("color not apple");
+            }
+        }, delay)
+    })
+}
+
+colorchg("red", 500)
+.then(()=>{ return colorchg("blue", 1000)})
+.then(()=>{ return colorchg("green", 1500)})
+.then(()=>{ return colorchg("orange", 2000)})
+.then(()=>{ return colorchg("voilet", 2500)})
+.then(()=>{ return colorchg("darkgreen", 3000)})
+.catch((err)=>{
+    h1.innerText = "The error come";
+})
+
+async function colorsch() {
+    await colorchg("red", 1000);
+    await colorchg("blue", 1000);
+    await colorchg("green", 1000);
+    await colorchg("yellow", 1000);
+    await colorchg("purple", 1000);
+    console.log("should print after");
+}
+
+
+async function asyncDemo(){
+    await setTimeout(()=>{
+        h1.innerHTML = "The Set Time Out!";
+    }, 2000);
+
+    await setTimeout(()=>{
+        h1.style.color = "red";
+    }, 1000);
+    console.log("The work done!")
+}
+
+function delayFact(data, color) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            h1.innerText = data;
+            h1.style.color = color
+            resolve();
+        }, 2000);
+    })
+}
+let url = "https://catfact.ninja/fact"
+async function apiTest() {
+    try {
+        let res = await fetch(url);
+        let data1 = await res.json();
+        await delayFact(data1.fact, "red");
+        console.log("data1 displays");
+
+        let res2 = await fetch(url);
+        let data2 = await res2.json();
+        await delayFact(data2.fact, "blue");
+        console.log("data2 displays");
+
+        let res3 = await fetch(url);
+        let data3 = await res3.json();
+        await delayFact(data3.fact, "green");
+        console.log("data3 displays");
+
+        let res4 = await fetch(url);
+        let data4 = await res4.json();
+        await delayFact(data4.fact, "purple");
+        console.log("data4 displays");
+
+    } catch (err) {
+        console.log("The Error - ", err)
+    }
+}
+
+// The Random Cats Facts Implementation -------------------------------
+let button = document.querySelector("#catFact");
+button.addEventListener("click", () => {
+    getFacts()
+        .then((fact) => {
+            let para = document.querySelector("#factPara");
+            para.innerText = fact;
+        })
+});
+async function getFacts() {
+    let response = await axios.get(url);
+    return response.data.fact;
+}
+
+// The Random Dog image implementation ------------------------------
+let btnDog = document.querySelector("#btnDog");
+let dogurl = "https://random.dog/woof.json";
+
+btnDog.addEventListener("click", () => {
+    dogImage()
+        .then((result) => {
+            if (result.toLowerCase().endsWith(".jpg") || result.toLowerCase().endsWith(".png")) {
+                console.log("Image come!", result);
+                let imgDog = document.querySelector("#imgDog");
+                imgDog.setAttribute("src", result);
+            } else {
+                console.log("video come!", result);
+                let vidDog = document.querySelector("#vidDog");
+                vidDog.setAttribute("src", result);
+            }
+        })
+});
+async function dogImage() {
+    let response = await axios.get(dogurl);
+    return response.data.url;
+}
+
+
+// ===============================  Dad Jokes ===============================
+
+let btnjoke = document.querySelector("#btnjoke");
+btnjoke.addEventListener("click", () => {
+    dadjokes()
+        .then((res) => {
+            let jokePara = document.querySelector("#jokePara");
+            jokePara.innerText = res
+        })
+})
+
+let jokeurl = "https://icanhazdadjoke.com/";
+async function dadjokes() {
+    let header = { headers: { Accept: "application/json" } }
+    let response = await axios.get(jokeurl, header);
+    return response.data.joke
+}
+
+// =============================== Colleges According to the Country and State ===================
+
+let btnclg = document.querySelector("#btnclg");
+
+btnclg.addEventListener("click", () => {
+    let clginput = document.querySelector("#clginput").value;
+    let clgState = document.querySelector("#clgState").value;
+    let clgPara = document.querySelector("#clgpara");
+
+    if (clginput == "" || clginput == " ") {
+        alert("Please Enter the Valid Country Name!")
+    }
+    else if (clgState == "" || clgState == " ") {
+        alert("Please Enter the Valid State Name!")
+    } else {
+        clgData(clginput)
+            .then((response) => {
+                let clgList = document.querySelector("#clgList");
+                clgList.innerText = "";
+                for (res of response) {
+                    if (res["state-province"] == null) {
+                        // console.log(res);
+                    }
+                    else if (res["state-province"].toLowerCase() == clgState.toLowerCase()) {
+                        let li = document.createElement("li");
+                        li.innerText = res.name;
+                        clgList.appendChild(li)
+                    }
+                }
+            })
+    }
+})
+
+async function clgData(country) {
+    try {
+        let url = `http://universities.hipolabs.com/search?name=${country}`;
+        let res = await axios.get(url);
+        console.log(res.data[0].name);
+        return res.data
+    } catch (err) {
+        console.log("The Error is : ", err)
+    }
+}
+
+
+// ---------------------------------------------------------------
+
+let res = function () {
+    let count = 0;
+    return {
+        increment: function () {
+            count++;
+            console.log(count);
+        },
+        reset: function () {
+            count = 0;
+            console.log(count);
+        }
+    };
+};
+
+
+function Person(name) {
+  this.name = name;
+  return function() {
+    console.log(this.name);
+  };
+}
+
+const p = new Person("Abdul");
+p(); 
+
+
