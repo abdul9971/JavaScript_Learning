@@ -483,3 +483,18 @@ function simulateFestival(gates, timeBlock) {
 }
 
 simulateFestival( morningGates, "Morning")
+
+// ============================================ Program to find missing letter in alphabets ===============================================
+function fearNotLetter(str){
+  const alpha = "abcdefghijklmnopqrstuvwxyz";
+  const fstIndex = alpha.indexOf(str[0]);
+  const lstIndex = alpha.indexOf(str[str.length-1]);
+  for (let i=fstIndex; i<lstIndex+1; i++){
+    if(!str.includes(alpha[i])){
+      return alpha[i]
+    }
+  }
+  return 
+}
+// run function
+console.log(fearNotLetter("abce"))
