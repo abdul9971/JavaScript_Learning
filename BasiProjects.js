@@ -498,3 +498,56 @@ function fearNotLetter(str){
 }
 // run function
 console.log(fearNotLetter("abce"))
+
+
+// ============================================ Program to find Build an Inventory Management Program ===============================================
+const inventory = []
+
+function findProductIndex(proName) {
+  for (let i = 0; i < inventory.length; i++) {
+    if (inventory[i].name == proName.toLowerCase()) {
+      return i;
+    }
+  }
+  return -1
+}
+
+function addProduct(productObj) {
+  let notFound = true;
+  for (let i = 0; i < inventory.length; i++) {
+    if (inventory[i].name == productObj.name.toLowerCase()) {
+      inventory[i].quantity += productObj.quantity;
+      console.log(productObj.name.toLowerCase() + " quantity updated")
+      notFound = false
+    }
+  }
+
+  if (notFound) {
+    productObj.name = productObj.name.toLowerCase()
+    inventory.push(productObj);
+    console.log(productObj.name + " added to inventory")
+  }
+}
+
+function removeProduct(pName, pQuantity) {
+  let isFound = false
+  for (let i=0; i < inventory.length; i++) {
+    if (inventory[i].name == pName.toLowerCase()) {
+      isFound = true
+      if (inventory[i].quantity - pQuantity == 0) {
+        inventory.splice(i, 1)
+      } else if (inventory[i].quantity - pQuantity < 0) {
+        console.log(`Not enough ${inventory[i].name} available, remaining pieces: ${inventory[i].quantity}`)
+      } else {
+        inventory[i].quantity -= pQuantity;
+        console.log(`Remaining ${inventory[i].name} pieces: ${inventory[i].quantity}`)
+      }
+    }
+  }
+
+  if (!isFound) {
+    console.log(`${pName.toLowerCase()} not found`)
+  }
+}
+
+removeProduct("FLOUR", 5)
