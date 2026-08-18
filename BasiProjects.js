@@ -551,3 +551,138 @@ function removeProduct(pName, pQuantity) {
 }
 
 removeProduct("FLOUR", 5)
+
+// ============================================ Program to find Build a Playlist Remix Engine ===============================================
+
+// Demo Data for testing
+const playlists = [
+  [
+    {
+      trackId: "trk101",
+      artist: "Velvet Comet",
+      title: "Crimson Afterglow",
+      votes: 5,
+      bpm: 122
+    },
+    {
+      trackId: "trk102",
+      artist: "Neon Harbor",
+      title: "Static Horizon",
+      votes: 2,
+      bpm: 108
+    },
+    {
+      trackId: "trk103",
+      artist: "Lunar Arcade",
+      title: "Midnight Frequency",
+      votes: 4,
+      bpm: 128
+    }
+  ],
+  [
+    {
+      trackId: "trk201",
+      artist: "Solar Echo",
+      title: "Glass Skyline",
+      votes: 3,
+      bpm: 115
+    },
+    {
+      trackId: "trk202",
+      artist: "Velvet Comet",
+      title: "Satellite Hearts",
+      votes: 6,
+      bpm: 124
+    }
+  ]
+];
+
+function flattenPlaylists(plists) {
+  const resPlaylist = []
+
+  if (!Array.isArray(plists)) {
+    return resPlaylist
+  }
+
+  for (let i = 0; i < plists.length; i++) {
+    for (let j = 0; j < plists[i].length; j++) {
+      const obj = {}
+      for (let key in plists[i][j]) {
+        obj[key] = plists[i][j][key]
+      }
+      obj['source'] = [i,j];
+      resPlaylist.push(obj)
+    }
+  }
+  return resPlaylist
+}
+
+function scoreTracks(newPList) {
+  const resPlaylist = [];
+  for (let i = 0; i < newPList.length; i++) {
+    const obj = {}
+    for (const key in newPList[i]) {
+      obj[key] = newPList[i][key]
+    }
+    obj["score"] = newPList[i].votes * 10 - Math.abs(newPList[i].bpm - 120)
+    resPlaylist.push(obj)
+  }
+  return resPlaylist
+}
+
+function dedupeTracks(scorePL) {
+  const resPlaylist = [];
+  for (let i = 0; i < scorePL.length; i++) {
+    if (resPlaylist.length == 0) {
+      resPlaylist.push(scorePL[i])
+      continue
+    }
+    if (resPlaylist.some(obj => obj.trackId == scorePL[i].trackId)) { continue }
+    resPlaylist.push(scorePL[i])
+  }
+  return resPlaylist
+}
+
+function enforceArtistQuota(dedupePL, maxNum) {
+  const resPlaylist = []
+  const artistNames = []
+  for (let i = 0; i < dedupePL.length; i++) {
+    if (resPlaylist.length == 0) {
+      resPlaylist.push(dedupePL[i])
+      artistNames.push(dedupePL[i].artist)
+      continue
+    }
+    if (artistNames.indexOf(dedupePL[i].artist) != -1) {
+      if (artistNames.filter(val => val == dedupePL[i].artist).length >= maxNum) {
+        continue
+      } else {
+        resPlaylist.push(dedupePL[i]);
+        artistNames.push(dedupePL[i].artist)
+      }
+    } else {
+      resPlaylist.push(dedupePL[i]);
+      artistNames.push(dedupePL[i].artist)
+    }
+  }
+  return resPlaylist
+}
+
+function buildSchedule(eAQPL){
+  const buildSchPL = []
+  for(let i=0; i<eAQPL.length; i++){
+    const obj = {};
+    obj.slot = i+1
+    obj.trackId = eAQPL[i].trackId;
+    buildSchPL.push(obj)
+  }
+  return buildSchPL
+}
+
+function remixPlaylist(playlists, maxNum){
+  const flattenPL = flattenPlaylists(playlists);
+  const scorePL = scoreTracks(flattenPL);
+  const dedupePL = dedupeTracks(scorePL);
+  const eAQPL = enforceArtistQuota(dedupePL, maxNum);
+  const buildSchPL = buildSchedule(eAQPL)
+  return buildSchPL 
+}
