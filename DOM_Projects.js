@@ -294,4 +294,39 @@ selectContainer.addEventListener("change", () => {
   productsContainer.innerHTML = instrumentCards(selectContainer.value);
 });
 
-//  ====================================================== Program to Build =====================================================
+//  ====================================================== Program to Build a Real Time Counter =====================================================
+
+// ===============>>>>>>>>>>>>  index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Counter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<textarea id="text-input" placeholder="Type Something..."></textarea>
+<p id="char-count">Character Count: 0/50</p>
+<script src="script.js"></script>
+</body>
+</html>
+// ==============>>>>>>>>>>>  style.css
+.red{
+  color: red;
+}
+// ============>>>>>>>>>>>>  script.js
+const textInput = document.getElementById("text-input");
+const charCount = document.getElementById("char-count");
+textInput.addEventListener("input", (event)=>{
+  if(event.target.value.length < 50){
+    charCount.innerHTML = `Character Count: ${event.target.value.length}/50`
+  }else if(event.target.value.length == 50){
+    charCount.innerHTML = `Character Count: ${event.target.value.length}/50`;
+    charCount.classList.add("red");
+  }else{
+    textInput.value = textInput.value.slice(0,50);
+  }
+});
+
+//  ====================================================== Program to  =====================================================
