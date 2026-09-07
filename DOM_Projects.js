@@ -329,4 +329,271 @@ textInput.addEventListener("input", (event)=>{
   }
 });
 
-//  ====================================================== Program to  =====================================================
+//  ====================================================== Program to Build a Set of Football Team Cards =====================================================
+
+// ==============>>>>>>>>>> index.html
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Build a Set of Football Team Cards
+    </title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1 class="title">Team stats</h1>
+    <main>
+      <div class="team-stats">
+        <p>Team: <span id="team"></span></p>
+        <p>Year: <span id="year"></span></p>
+        <p>Head coach: <span id="head-coach"></span></p>
+      </div>
+      <label class="options-label" for="players">Filter Teammates:</label>
+      <select name="players" id="players">
+        <option value="all">All Players</option>
+        <option value="forward">Position Forward</option>
+        <option value="midfielder">Position Midfielder</option>
+        <option value="defender">Position Defender</option>
+        <option value="goalkeeper">Position Goalkeeper</option>
+      </select>
+      <div class="cards" id="player-cards"></div>
+    </main>
+    <footer>&copy; freeCodeCamp</footer>
+    <script src="./script.js"></script>
+  </body>
+</html>
+
+// ==============>>>>>>>>>> style.css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --dark-grey: #0a0a23;
+  --light-grey: #f5f6f7;
+  --white: #ffffff;
+  --black: #000;
+}
+
+body {
+  background-color: var(--dark-grey);
+  text-align: center;
+  padding: 10px;
+}
+
+.title,
+.options-label,
+.team-stats,
+footer {
+  color: var(--white);
+}
+
+.title {
+  margin: 1.3rem 0;
+}
+
+.team-stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  font-size: 1.3rem;
+  margin: 1.2rem 0;
+}
+
+.options-label {
+  font-size: 1.2rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.player-card {
+  background-color: var(--light-grey);
+  padding: 1.3rem;
+  margin: 1.2rem;
+  width: 300px;
+  border-radius: 15px;
+}
+@media (max-width: 768px) {
+  .team-stats {
+    flex-direction: column;
+  }
+}
+
+// ==============>>>>>>>>>> script.js
+const footballTeam = {
+  team: "Argentina",
+  year: 1986,
+  headCoach: "Carlos Bilardo",
+  players: [
+    {
+      name: "Sergio Almirón",
+      position: "forward",
+      isCaptain: false
+    },
+
+    {
+      name: "Sergio Batista",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "Ricardo Bochini",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "Claudio Borghi",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "José Luis Brown",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "Daniel Passarella",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "Jorge Burruchaga",
+      position: "forward",
+      isCaptain: false
+    },
+
+    {
+      name: "Néstor Clausen",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "José Luis Cuciuffo",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "Diego Maradona",
+      position: "midfielder",
+      isCaptain: true
+    },
+
+    {
+      name: "Jorge Valdano",
+      position: "forward",
+      isCaptain: false
+    },
+
+    {
+      name: "Héctor Enrique",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "Oscar Garré",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "Ricardo Giusti",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "Luis Islas",
+      position: "goalkeeper",
+      isCaptain: false
+    },
+
+    {
+      name: "Julio Olarticoechea",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "Pedro Pasculli",
+      position: "forward",
+      isCaptain: false
+    },
+
+    {
+      name: "Nery Pumpido",
+      position: "goalkeeper",
+      isCaptain: false
+    },
+
+    {
+      name: "Oscar Ruggeri",
+      position: "defender",
+      isCaptain: false
+    },
+
+    {
+      name: "Carlos Tapia",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "Marcelo Trobbiani",
+      position: "midfielder",
+      isCaptain: false
+    },
+
+    {
+      name: "Héctor Zelada",
+      position: "goalkeeper",
+      isCaptain: false
+    },
+  ]
+}
+const headCoach = document.getElementById("head-coach");
+const team = document.getElementById("team");
+const year = document.getElementById("year");
+const playerCards = document.getElementById("player-cards");
+const players = document.getElementById("players");
+headCoach.textContent = footballTeam.headCoach;
+team.textContent = footballTeam.team;
+year.textContent = footballTeam.year;
+players.addEventListener("change", (event) => {
+  console.log(event.target.value);
+  playerCards.innerHTML = ""
+  for (const player of footballTeam.players) {
+    if (player.position == event.target.value && event.target.value != "all") {
+      if (player.isCaptain) {
+        playerCards.innerHTML += `<div class="player-card"><h2>(Captain) ${player.name}</h2><p>Position: ${player.position}</p></div>`;
+        continue
+      };
+      playerCards.innerHTML += `<div class="player-card"><h2>${player.name}</h2><p>Position: ${player.position}</p></div>`;
+    }else if(event.target.value == "all"){
+      if (player.isCaptain) {
+        playerCards.innerHTML += `<div class="player-card"><h2>(Captain) ${player.name}</h2><p>Position: ${player.position}</p></div>`;
+        continue
+      };
+      playerCards.innerHTML += `<div class="player-card"><h2>${player.name}</h2><p>Position: ${player.position}</p></div>`;
+    }
+  };
+})
