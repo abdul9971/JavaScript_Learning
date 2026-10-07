@@ -2241,3 +2241,286 @@ taskForm.addEventListener("submit", (e) => {
   e.preventDefault();
   addOrUpdateTask();
 });
+
+//  ====================================================== Program to Build a Bookmark Manager App =====================================================
+// ==================>>>>>>>>>>>>>>>> index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.0">
+    <title>Bookmark Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <main>
+        <section id="main-section">
+            <h1>Bookmark Manager</h1>
+            <div id="dropdown">
+                <label for="category-dropdown">Select a category:</label>
+                <select id="category-dropdown" name="options">
+                    <option value="news" selected>News</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="work">Work</option>
+                    <option value="miscellaneous">Miscellaneous</option>
+                </select>
+            </div>
+            <div id="buttons">
+                <button type="button" id="view-category-button">View Category</button>
+                <button type="button" id="add-bookmark-button">Add Bookmark</button>
+            </div>
+        </section>
+        <section id="form-section" class="hidden">
+            <form>
+                <h2 class="category-name"></h2>
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name">
+                </div>
+                <div>
+                    <label for="url">URL:</label>
+                    <input type="text" id="url">
+                </div>
+                <div>
+                    <button type="button" id="close-form-button">Go Back</button>
+                    <button type="button" id="add-bookmark-button-form">Add Bookmark</button>
+                </div>
+            </form>
+        </section>
+        <section id="bookmark-list-section" class="hidden">
+            <h2 class="category-name"></h2>
+            <div id="category-list">
+            </div>
+            <div>
+                <button type="button" id="close-list-button">Go Back</button>
+                <button type="button" id="delete-bookmark-button">Delete Bookmark</button>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
+
+// ==================>>>>>>>>>>>>>>>> style.css
+:root {
+  --light-grey: #f5f6f7;
+  --dark-grey: #0a0a23;
+  --yellow: #f1be32;
+  --golden-yellow: #feac32;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  background-color: var(--dark-grey);
+}
+
+.hidden {
+  display: none;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+select,
+input,
+label {
+  margin-left: 10px;
+}
+
+div {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.close-form-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+h1, h2 {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#category-list {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: var(--light-grey);
+  align-self: center;
+  width: 80%;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+#category-list,
+h1,
+h2,
+label {
+  color: var(--light-grey);
+}
+#category-list p {
+  color: var(--dark-grey);
+}
+button {
+  cursor: pointer;
+  padding: 5px;
+  width: 100px;
+  margin: 10px;
+  color: var(--dark-grey);
+  background-color: var(--golden-yellow);
+  background-image: linear-gradient(#fecc4c, #ffac33);
+  border-color: var(--golden-yellow);
+  border-width: 3px;
+}
+button:hover {
+  background-image: linear-gradient(#ffcc4c, #f89808);
+}
+section {
+  margin-top: 60px;
+  border: 2px solid var(--golden-yellow);
+  width: fit-content;
+  border-radius: 10px;
+}
+
+// ==================>>>>>>>>>>>>>>>> script.js
+const mainSection = document.getElementById("main-section");
+const formSection = document.getElementById("form-section");
+const addBookmarkButton = document.getElementById("add-bookmark-button")
+const categoryDropdown = document.getElementById("category-dropdown")
+const closeFormButton = document.getElementById("close-form-button")
+const addBookmarkButtonForm = document.getElementById("add-bookmark-button-form");
+const name = document.getElementById("name");
+const url = document.getElementById("url");
+const deleteBookmarkButton = document.getElementById("delete-bookmark-button");
+const closeListButton = document.getElementById("close-list-button");
+const categoryList = document.getElementById("category-list");
+const viewCategoryButton = document.getElementById("view-category-button");
+const bookmarkListSection = document.getElementById("bookmark-list-section");
+const categoryName = document.querySelectorAll(".category-name");
+
+
+function getBookmarks() {
+  const bookmarksJson = localStorage.getItem("bookmarks");
+
+  if (!bookmarksJson) { return [] }
+
+  try{
+  const bookmarksArr = JSON.parse(bookmarksJson);
+  if (Array.isArray(bookmarksArr)) {
+    if (!bookmarksArr.every(item => typeof item === "object")) { return [] }
+    else if (!bookmarksArr.every(item => item.name && item.category && item.url)) { return [] }
+  }
+  else { return [] }
+  return bookmarksArr;
+  }
+  catch{
+    return [];
+  }
+}
+
+function toListCategory() {
+  const bookmarkArr = getBookmarks();
+  if (bookmarkArr.length == 0) {
+    categoryList.innerHTML = "<p>No Bookmarks Found</p>";
+  }
+  else if (!bookmarkArr.some(item => item.category == categoryDropdown.value)) {
+    categoryList.innerHTML = "<p>No Bookmarks Found</p>";
+  }
+  else {
+    categoryList.innerHTML = "";
+    bookmarkArr.forEach((item) => {
+      if (item.category == categoryDropdown.value) {
+        categoryList.innerHTML += `<input type="radio" id="${item.name}" value="${item.name}" name="category-radio"><label for="${item.name}"><a href="${item.url}">${item.name}</a></label>`
+      }
+    })
+  }
+}
+
+const displayOrCloseForm = () => {
+  mainSection.classList.toggle("hidden");
+  formSection.classList.toggle("hidden");
+}
+const displayOrHideCategory = () => {
+  mainSection.classList.toggle("hidden");
+  bookmarkListSection.classList.toggle("hidden");
+}
+
+addBookmarkButton.addEventListener("click", () => {
+  const categoryValue = categoryDropdown.value;
+  categoryName.forEach(ele => {
+    ele.innerText = categoryValue;
+  })
+  displayOrCloseForm();
+})
+
+closeFormButton.addEventListener("click", displayOrCloseForm);
+closeListButton.addEventListener("click", displayOrHideCategory)
+
+addBookmarkButtonForm.addEventListener("click", () => {
+  const localObj = {
+    name: name.value,
+    category: categoryDropdown.value,
+    url: url.value
+  }
+  const bookmarkArr = getBookmarks();
+  if (bookmarkArr.length == 0) {
+    localStorage.setItem("bookmarks", JSON.stringify([localObj]));
+  } else {
+    bookmarkArr.push(localObj);
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarkArr));
+  }
+
+  name.value = "";
+  url.value = "";
+  displayOrCloseForm();
+})
+
+viewCategoryButton.addEventListener("click", () => {
+  const categoryValue = categoryDropdown.value;
+  categoryName.forEach(ele => {
+    ele.innerText = categoryValue;
+  });
+
+  toListCategory()
+  displayOrHideCategory()
+})
+
+deleteBookmarkButton.addEventListener("click", () => {
+  const radios = document.querySelectorAll('input[name="category-radio"]');
+  const selectedRadio = Array.from(radios).find(radio => radio.checked);
+
+  if (selectedRadio) {
+    const bookmarksArr = getBookmarks();
+
+    if (bookmarksArr.length != 0) {
+      const newBookmarks = bookmarksArr.filter(item => item.name == selectedRadio.id && item.category == categoryDropdown.value);
+      bookmarksArr.splice(bookmarksArr.indexOf(newBookmarks[0]),1)
+      
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarksArr));
+
+      toListCategory() //----- Updating Category list
+    }
+  }
+});
+
+//  ====================================================== Program to Build =====================================================
