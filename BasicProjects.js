@@ -764,4 +764,134 @@ vote("Turkey", "traveler2")
 vote("Morocco", "traveler3")
 
 console.log(displayResults())
-// ============================================ Program to Build a Voting System ===============================================
+// ============================================ Program to Build a Linked List Data Structure ===============================================
+
+function initList() {
+  return {
+    head: null,
+    length: 0
+  };
+}
+
+function isEmpty(list) {
+  return list.length === 0;
+}
+
+function add(list, element) {
+  const node = { element, next: null };
+
+  if (isEmpty(list)) {
+    list.head = node;
+  } else {
+    let current = list.head;
+    while (current.next !== null) {
+      current = current.next;
+    }
+    current.next = node;
+  }
+
+  list.length++;
+}
+
+function remove(list, element) {
+  let previous = null;
+  let current = list.head;
+
+  while (current !== null && current.element !== element) {
+    previous = current;
+    current = current.next;
+  }
+
+  if (current === null) return;
+
+  if (previous !== null) {
+    previous.next = current.next;
+  } else {
+    list.head = current.next;
+  }
+
+  list.length--;
+}
+
+function contains(list, element) {
+  let current = list.head;
+  if(list.length == 0){
+    return false
+  }
+  while(current.next !== null && current.element !== element){
+    current = current.next
+  };
+  return current.element === element;
+};
+
+function getAt(list, index) {
+ let current = list.head;
+ let idx = 0;
+  while(current !== null){
+    if(idx == index){
+      return current.element;
+    }
+    idx++
+    current = current.next
+  };
+}
+
+function insertAt(list, index, element) {
+  let current = list.head;
+  let previous = null;
+  let idx = 0;
+
+  if(list.length == 0 && index == 0){
+    list.head = {element: element, next: null};
+    list.length++
+    return
+  }
+  if(index == 0){
+    list.head = {element: element, next: current};
+    list.length++
+    return
+  }
+  while(current !== null){
+    if(idx == index){
+      previous.next = {element:element, next:current};
+      list.length++
+      return;
+    }
+    idx++;
+    previous = current;
+    current = current.next
+  };
+  if(list.length == index){
+    previous.next = {element:element, next:null};
+    list.length++;
+    return
+  }
+}
+
+function removeAt(list, index) {
+ let previous = null;
+ let current = list.head;
+ let idx = 0;
+
+ if(index == 0){
+  list.head = current.next;
+  list.length--;
+  return
+ }
+
+ while(current !== null){
+  if(idx == index){
+    previous.next = current.next;
+    list.length--
+  }
+
+  idx++
+  previous = current
+  current = current.next
+ }
+}
+
+function clear(list) {
+  list.head = null,
+  list.length = 0
+}
